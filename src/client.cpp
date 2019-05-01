@@ -205,7 +205,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bSupportsChannelGroups      = true;
   pCapabilities->bSupportsChannelScan        = false;
   pCapabilities->bSupportsChannelSettings    = false;
-  pCapabilities->bHandlesInputStream         = true;
+  pCapabilities->bHandlesInputStream         = false;
   pCapabilities->bHandlesDemuxing            = false;
   pCapabilities->bSupportsRecordingPlayCount = settings.SupportsEditingRecordings() && settings.GetStoreRecordingLastPlayedAndCount();
   pCapabilities->bSupportsLastPlayedPosition = settings.SupportsEditingRecordings() && settings.GetStoreRecordingLastPlayedAndCount();
@@ -343,6 +343,29 @@ PVR_ERROR GetStreamReadChunkSize(int* chunksize)
   if (!size)
     return PVR_ERROR_NOT_IMPLEMENTED;
   *chunksize = settings.GetStreamReadChunkSizeKb() * 1024;
+  return PVR_ERROR_NO_ERROR;
+}
+
+PVR_ERROR GetChannelStreamProperties(const PVR_CHANNEL* channel, PVR_NAMED_VALUE* properties, unsigned int* iPropertiesCount)
+{
+  if (!channel || !properties || !iPropertiesCount)
+    return PVR_ERROR_SERVER_ERROR;
+
+  if (*iPropertiesCount < 1)
+    return PVR_ERROR_INVALID_PARAMETERS;
+
+  if (!enigma || !enigma->IsConnected())
+    return PVR_ERROR_SERVER_ERROR;
+
+  std::string strStreamURL = enigma->GetLiveStreamURL(*channel);
+  if (strStreamURL.empty())
+    return PVR_ERROR_SERVER_ERROR;
+
+    Logger::Log(LEVEL_NOTICE, "%s - XXXXXXXXXXXXXXXXXXXXXXXXXX", __FUNCTION__);
+
+  strncpy(properties[0].strName, PVR_STREAM_PROPERTY_STREAMURL, sizeof(properties[0].strName) - 1);
+  strncpy(properties[0].strValue, strStreamURL.c_str(), sizeof(properties[0].strValue) - 1);
+  *iPropertiesCount = 1;
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -552,6 +575,29 @@ bool OpenRecordedStream(const PVR_RECORDING &recording)
   return recordingReader->Start();
 }
 
+PVR_ERROR GetRecordingStreamProperties(const PVR_RECORDING* recording, PVR_NAMED_VALUE* properties, unsigned int* iPropertiesCount)
+{
+  if (!recording || !properties || !iPropertiesCount)
+    return PVR_ERROR_SERVER_ERROR;
+
+  if (*iPropertiesCount < 1)
+    return PVR_ERROR_INVALID_PARAMETERS;
+
+  if (!enigma || !enigma->IsConnected())
+    return PVR_ERROR_SERVER_ERROR;
+
+    Logger::Log(LEVEL_NOTICE, "%s - YYYYYYYYYYYYYYYYYYYYYYYYYYYY", __FUNCTION__);
+
+  std::string strStreamURL = enigma->GetRecordingsContainer().GetRecordingURL(*recording);
+  if (strStreamURL.empty())
+    return PVR_ERROR_SERVER_ERROR;
+
+  strncpy(properties[0].strName, PVR_STREAM_PROPERTY_STREAMURL, sizeof(properties[0].strName) - 1);
+  strncpy(properties[0].strValue, strStreamURL.c_str(), sizeof(properties[0].strValue) - 1);
+  *iPropertiesCount = 1;
+  return PVR_ERROR_NO_ERROR;
+}
+
 void CloseRecordedStream(void)
 {
   if (recordingReader)
@@ -636,7 +682,7 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer)
 
 /** UNUSED API FUNCTIONS */
 PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR GetChannelStreamProperties(const PVR_CHANNEL*, PVR_NAMED_VALUE*, unsigned int*) { return PVR_ERROR_NOT_IMPLEMENTED; }
+//PVR_ERROR GetChannelStreamProperties(const PVR_CHANNEL*, PVR_NAMED_VALUE*, unsigned int*) { return PVR_ERROR_NOT_IMPLEMENTED; }
 void DemuxAbort(void) { return; }
 DemuxPacket* DemuxRead(void) { return nullptr; }
 PVR_ERROR OpenDialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
@@ -645,7 +691,7 @@ PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLE
 PVR_ERROR RenameChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR GetRecordingStreamProperties(const PVR_RECORDING* recording, PVR_NAMED_VALUE* properties, unsigned int* iPropertiesCount) { return PVR_ERROR_NOT_IMPLEMENTED; }
+//PVR_ERROR GetRecordingStreamProperties(const PVR_RECORDING* recording, PVR_NAMED_VALUE* properties, unsigned int* iPropertiesCount) { return PVR_ERROR_NOT_IMPLEMENTED; }
 void DemuxReset(void) {}
 void DemuxFlush(void) {}
 bool SeekTime(double,bool,double*) { return false; }
