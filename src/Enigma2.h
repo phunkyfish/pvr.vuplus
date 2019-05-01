@@ -102,6 +102,8 @@ public:
   PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed);
   PVR_ERROR GetTunerSignal(PVR_SIGNAL_STATUS &signalStatus);
 
+  enigma2::Recordings GetRecordingsContainer() { return m_recordings; };
+
 protected:
   void* Process() override;
 
