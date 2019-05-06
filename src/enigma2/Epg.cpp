@@ -74,25 +74,25 @@ bool Epg::Initialise(enigma2::Channels &channels, enigma2::ChannelGroups &channe
   }
 
   //load each group and if we don't already have it's intial EPG then load those entries
-  for (auto& group : groupList)
-  {
-    LoadInitialEPGForGroup(group);
+  // for (auto& group : groupList)
+  // {
+  //   LoadInitialEPGForGroup(group);
 
-    //Remove channels that now have an initial EPG
-    for (auto& epgChannel : m_epgChannels)
-    {
-      if (epgChannel->GetInitialEPG().size() > 0)
-        InitialEpgLoadedForChannel(epgChannel->GetServiceReference());
-    }
+  //   //Remove channels that now have an initial EPG
+  //   for (auto& epgChannel : m_epgChannels)
+  //   {
+  //     if (epgChannel->GetInitialEPG().size() > 0)
+  //       InitialEpgLoadedForChannel(epgChannel->GetServiceReference());
+  //   }
 
-    Logger::Log(LEVEL_DEBUG, "%s Initial EPG Progress - Remaining channels %d, Min Channels for completion %d", __FUNCTION__, m_needsInitialEpgChannelsMap.size(), lastScannedIgnoreSuccessCount);
+  //   Logger::Log(LEVEL_DEBUG, "%s Initial EPG Progress - Remaining channels %d, Min Channels for completion %d", __FUNCTION__, m_needsInitialEpgChannelsMap.size(), lastScannedIgnoreSuccessCount);
 
-    for (auto pair : m_needsInitialEpgChannelsMap)
-      Logger::Log(LEVEL_DEBUG, "%s - Initial EPG Progress - Remaining channel: %s - sref: %s", __FUNCTION__, pair.second->GetChannelName().c_str(), pair.first.c_str());
+  //   for (auto pair : m_needsInitialEpgChannelsMap)
+  //     Logger::Log(LEVEL_DEBUG, "%s - Initial EPG Progress - Remaining channel: %s - sref: %s", __FUNCTION__, pair.second->GetChannelName().c_str(), pair.first.c_str());
 
-    if (group->IsLastScannedGroup() && m_needsInitialEpgChannelsMap.size() <= lastScannedIgnoreSuccessCount)
-      break;
-  }
+  //   if (group->IsLastScannedGroup() && m_needsInitialEpgChannelsMap.size() <= lastScannedIgnoreSuccessCount)
+  //     break;
+  // }
 
   int milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
                       std::chrono::high_resolution_clock::now() - started).count();
