@@ -150,7 +150,7 @@ void Enigma2::ConnectionEstablished()
     }
   }
 
-  m_skipInitialEpgLoad = m_settings.SkipInitialEpgLoad();
+  m_skipInitialEpgLoad = true;//m_settings.SkipInitialEpgLoad();
 
   m_epg.Initialise(m_channels, m_channelGroups);
 
@@ -192,20 +192,20 @@ void *Enigma2::Process()
   Logger::Log(LEVEL_DEBUG, "%s - starting", __FUNCTION__);
 
   // Wait for the initial EPG update to complete
-  int totalWaitSecs = 0;
-  while (totalWaitSecs < INITIAL_EPG_WAIT_SECS)
-  {
-    totalWaitSecs += INITIAL_EPG_STEP_SECS;
+  // int totalWaitSecs = 0;
+  // while (totalWaitSecs < INITIAL_EPG_WAIT_SECS)
+  // {
+  //   totalWaitSecs += INITIAL_EPG_STEP_SECS;
 
-    if (!m_epg.IsInitialEpgCompleted())
-      Sleep(INITIAL_EPG_STEP_SECS * 1000);
-  }
+  //   if (!m_epg.IsInitialEpgCompleted())
+  //     Sleep(INITIAL_EPG_STEP_SECS * 1000);
+  // }
 
   m_skipInitialEpgLoad = false;
 
   // Whether or not initial EPG updates occurred now Trigger "Real" EPG updates
   // This will regard Initial EPG as completed anyway.
-  m_epg.TriggerEpgUpdatesForChannels();
+  //m_epg.TriggerEpgUpdatesForChannels();
 
   unsigned int updateTimer = 0;
   time_t lastUpdateTimeSeconds = time(nullptr);
