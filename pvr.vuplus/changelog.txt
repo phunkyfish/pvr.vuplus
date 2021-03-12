@@ -1,3 +1,7 @@
+v7.5.0
+- Fixed: Change reported backend name to include Enigma2
+- Added: Support channel providers in Kodi 20
+
 v7.4.0
 - Added: Add setting to omit recording location base dir from recording path
 - Added: Correctly store the directory of a recording from the backend

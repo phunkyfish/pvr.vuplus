@@ -80,6 +80,7 @@ PVR_ERROR Enigma2::GetCapabilities(kodi::addon::PVRCapabilities& capabilities)
   capabilities.SetSupportsDescrambleInfo(false);
   capabilities.SetSupportsAsyncEPGTransfer(false);
   capabilities.SetSupportsRecordingSize(m_settings.SupportsRecordingSizes());
+  capabilities.SetSupportsChannelProviders(true);
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -395,6 +396,38 @@ bool Enigma2::IsConnected() const
 /***************************************************************************
  * Channel Groups
  **************************************************************************/
+
+PVR_ERROR Enigma2::GetChannelProvidersAmount(int& amount)
+{
+  Logger::Log(LEVEL_INFO, "%s - XXX ", __func__);
+
+  amount = 2;
+
+  return PVR_ERROR_NO_ERROR;
+}
+
+PVR_ERROR Enigma2::GetChannelProviders(kodi::addon::PVRChannelProvidersResultSet& results)
+{
+  Logger::Log(LEVEL_INFO, "%s - XXX ", __func__);
+
+  kodi::addon::PVRChannelProvider provider;
+  provider.SetUniqueId(1);
+  provider.SetProviderName("Saorview");
+  provider.SetProviderType(PVR_CHANNEL_PROVIDER_TYPE_AERIAL);
+  provider.SetCountry("Ireland");
+  provider.SetLanguage("Irish");
+  results.Add(provider);
+
+  kodi::addon::PVRChannelProvider provider2;
+  provider2.SetUniqueId(2);
+  provider2.SetProviderName("Freesat");
+  provider2.SetProviderType(PVR_CHANNEL_PROVIDER_TYPE_SATELLITE);
+  provider2.SetCountry("UK");
+  provider2.SetLanguage("English");
+  results.Add(provider2);
+
+  return PVR_ERROR_NO_ERROR;
+}
 
 PVR_ERROR Enigma2::GetChannelGroupsAmount(int& amount)
 {

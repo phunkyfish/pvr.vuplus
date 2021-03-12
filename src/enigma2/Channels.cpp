@@ -57,6 +57,7 @@ void Channels::GetChannels(std::vector<kodi::addon::PVRChannel>& kodiChannels, b
 
       channel->UpdateTo(kodiChannel);
       kodiChannel.SetOrder(channelOrder); //Keep the channels in list order as per the load order on the STB
+      kodiChannel.SetClientProviderUid(5);
 
       Logger::Log(LEVEL_DEBUG, "%s - Transfer channel '%s', ChannelIndex '%d', Order '%d''", __func__, channel->GetChannelName().c_str(),
                   channel->GetUniqueId(), channelOrder);
